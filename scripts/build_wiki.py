@@ -282,6 +282,19 @@ def build_arrests_fines_page(parsed: dict, nav_html: str, updated_iso: str) -> s
   parts.append(
     '<p class="muted">For full wording and context, open <a href="/wiki/docs/law-enforcement-guide.html">Law Enforcement Guide</a>.</p>'
   )
+
+  parts.append("<h2>Related laws</h2>")
+  parts.append(
+    """
+    <ul>
+      <li><a href="/wiki/docs/wetboek-van-strafrecht-2024.html">Wetboek van Strafrecht (2024)</a></li>
+      <li><a href="/wiki/docs/politiewet.html">Politiewet</a></li>
+      <li><a href="/wiki/docs/powers-of-law-enforcement-act-2020.html">Powers of Law Enforcement Act 2020</a></li>
+      <li><a href="/wiki/docs/search-act-of-2023.html">Search Act of 2023</a></li>
+      <li><a href="/wiki/docs/officie-le-instructie-voor-wetshandhavingsinstanties.html">Official Instruction for Law Enforcement Agencies</a></li>
+    </ul>
+    """.strip()
+  )
   parts.append("</article></main>")
   parts.append(
     """
