@@ -16,6 +16,7 @@ import shutil
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import quote
 
 from pdfminer.high_level import extract_text  # type: ignore
 
@@ -418,7 +419,8 @@ def main() -> int:
       continue
     text = read_pdf_text(pdf)
     blocks = split_paragraphs(text)
-    pdf_href = f"/documents/{pdf.name}"
+    # URL-encode filenames (handles spaces/accents safely).
+    pdf_href = f"/documents/{quote(pdf.name)}"
     doc_html = build_doc_html(d["title"], blocks, nav_html, updated_iso, pdf_href)
     write_file(OUT_DOCS_DIR / f"{d['slug']}.html", doc_html)
 
