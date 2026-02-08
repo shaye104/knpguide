@@ -72,7 +72,7 @@ def looks_like_heading(block: str) -> bool:
   return False
 
 
-def build_doc_html(title: str, blocks: list[str], nav_html: str, updated_iso: str) -> str:
+def build_doc_html(title: str, blocks: list[str], nav_html: str, updated_iso: str, pdf_href: str) -> str:
   parts: list[str] = []
   parts.append("<!doctype html>")
   parts.append('<html lang="en">')
@@ -102,7 +102,10 @@ def build_doc_html(title: str, blocks: list[str], nav_html: str, updated_iso: st
   parts.append(f'<aside class="sidebar">{nav_html}</aside>')
   parts.append('<article class="content card">')
   parts.append(f"<h1>{escape(title)}</h1>")
-  parts.append(f'<div class="meta">Updated: <time datetime="{updated_iso}">{escape(updated_iso)}</time></div>')
+  parts.append(
+    f'<div class="meta">Updated: <time datetime="{updated_iso}">{escape(updated_iso)}</time> · '
+    f'<a href="{escape(pdf_href)}">Download PDF</a></div>'
+  )
 
   for b in blocks:
     if b == "[[PAGEBREAK]]":
@@ -396,14 +399,14 @@ def main() -> int:
 
   # Write doc pages
   for d in docs_meta:
-    pdf = DOCS_DIR / f"{d['title']}.pdf"
-    # When the title contains '.' etc, use original by slug lookup instead.
+    # Use original by slug lookup (handles accents and spacing).
     pdf = next((p for p in pdfs if slugify(p.name) == d["slug"]), None)
     if not pdf:
       continue
     text = read_pdf_text(pdf)
     blocks = split_paragraphs(text)
-    doc_html = build_doc_html(d["title"], blocks, nav_html, updated_iso)
+    pdf_href = f"/documents/{pdf.name}"
+    doc_html = build_doc_html(d["title"], blocks, nav_html, updated_iso, pdf_href)
     write_file(OUT_DOCS_DIR / f"{d['slug']}.html", doc_html)
 
   # Arrests/Fines special page
@@ -424,4 +427,3 @@ def main() -> int:
 
 if __name__ == "__main__":
   raise SystemExit(main())
-
